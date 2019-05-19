@@ -3,7 +3,7 @@ The [MNIST](https://en.wikipedia.org/wiki/MNIST_database) dataset is a set of 70
 
 - **Difficulty**: Hard
 - **Training time**: < 3 Hours
-- **Memory needed**: about 4G
+- **Memory needed**: < 4G
 
 ## Installation
 
@@ -85,7 +85,19 @@ Lastly, to save our model we'll wrap the entire pipeline in a Persistent Model m
 
 ```php
 $estimator->train($dataset);
+```
 
+We can visualize the training progress at each stage by dumping the values of the loss function and validation metric to load into plotting software. In this case, the `steps()` method will output an array containing the values of the default [Cross Entropy](https://github.com/RubixML/RubixML#cross-entropy) cost function and the `scores()` will return an array of scores from the default [FBeta](https://github.com/RubixML/RubixML#f-beta) validation metric.
+
+```php
+$steps = $estimator->steps();
+
+$scores = $estimator->scores();
+```
+
+Finally, we save the trained network by calling the `save()` method provided by the [Persistent Model](https://github.com/RubixML/RubixML#persistent-model) wrapper.
+
+```php
 $estimator->save();
 ```
 

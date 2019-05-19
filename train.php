@@ -68,6 +68,8 @@ $writer = Writer::createFromPath(PROGRESS_FILE, 'w+');
 $writer->insertOne(['score', 'loss']);
 $writer->insertAll(array_map(null, $estimator->scores(), $estimator->steps()));
 
+echo 'Progress saved to ' . PROGRESS_FILE . PHP_EOL;
+
 if (strtolower(trim(readline('Save this model? (y|[n]): '))) === 'y') {
     $estimator->save();
 }
