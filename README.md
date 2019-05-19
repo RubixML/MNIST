@@ -25,7 +25,7 @@ Through the discovery of deep learning, computers are able to build and compose 
 
 Deep Learning involves subsequent layers of computation that break down the feature space into what are called *higher order representations*. For the MNIST problem, a classifier will need to be able to learn the lines, edges, corners, and combinations thereof in order to distinguish numbers from the images. In the figure below, we see a snapshot of the features at one of the hidden layers of a neural network trained on the MNIST dataset. The idea is that at each layer, the learner builds more detailed depictions of the training data until the digits are easily distinguishable by a [SoftMax](https://github.com/RubixML/RubixML#softmax) output layer.
 
-![MNIST Deep Learning](https://github.com/RubixML/MNIST/blob/master/docs/mnist-deep-learning.png?raw=true)
+![MNIST Deep Learning](https://github.com/RubixML/MNIST/blob/master/docs/images/mnist-deep-learning.png?raw=true)
 
 ### Training
 The MNIST dataset comes to us in the form of 60,000 training, and 10,000 testing images organized into folders where the folder name is the label given to the sample by a human. We'll use the `imagecreatefrompng()` function from the [GD library](https://www.php.net/manual/en/book.image.php) to load the images into PHP as resources. Then we'll instantiate a new [Labeled](https://github.com/RubixML/RubixML#labeled) dataset object with the samples and labels from the training set.
@@ -94,6 +94,14 @@ $steps = $estimator->steps();
 
 $scores = $estimator->scores();
 ```
+
+Here is what a typical training run looks like in terms of the Cross Entropy cost function.
+
+![Cross Entropy Loss](https://raw.githubusercontent.com/RubixML/MNIST/master/docs/images/cross-entropy-loss.svg?sanitize=true)
+
+And here is the F Beta validation score.
+
+![F Beta Score](https://raw.githubusercontent.com/RubixML/MNIST/master/docs/images/f-beta-score.svg?sanitize=true)
 
 Finally, we save the trained network by calling the `save()` method provided by the [Persistent Model](https://github.com/RubixML/RubixML#persistent-model) wrapper.
 
