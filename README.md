@@ -30,6 +30,8 @@ Deep Learning involves subsequent layers of computation that break down the feat
 ### Training
 The MNIST dataset comes to us in the form of 60,000 training, and 10,000 testing images organized into folders where the folder name is the label given to the sample by a human. We'll use the `imagecreatefrompng()` function from the [GD library](https://www.php.net/manual/en/book.image.php) to load the images into PHP as resources. Then we'll instantiate a new [Labeled](https://github.com/RubixML/RubixML#labeled) dataset object with the samples and labels from the training set.
 
+> Source code can be found in the [train.php](https://github.com/RubixML/MNIST/blob/master/train.php) file in project root.
+
 ```php
 use Rubix\ML\Datasets\Labeled;
 
@@ -99,7 +101,7 @@ Here is what a typical training run looks like in terms of the Cross Entropy cos
 
 ![Cross Entropy Loss](https://raw.githubusercontent.com/RubixML/MNIST/master/docs/images/cross-entropy-loss.svg?sanitize=true)
 
-And here is the F Beta validation score.
+And here is the F Beta validation score at each epoch.
 
 ![F Beta Score](https://raw.githubusercontent.com/RubixML/MNIST/master/docs/images/f-beta-score.svg?sanitize=true)
 
