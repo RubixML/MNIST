@@ -12,6 +12,8 @@ use Rubix\ML\CrossValidation\Reports\MulticlassBreakdown;
 const MODEL_FILE = 'mnist.model';
 const REPORT_FILE = 'report.json';
 
+ini_set('memory_limit', '-1');
+
 echo '╔═════════════════════════════════════════════════════╗' . PHP_EOL;
 echo '║                                                     ║' . PHP_EOL;
 echo '║ MNIST Handwritten Digit Recognizer                  ║' . PHP_EOL;

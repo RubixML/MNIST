@@ -21,6 +21,8 @@ use League\Csv\Writer;
 const MODEL_FILE = 'mnist.model';
 const PROGRESS_FILE = 'progress.csv';
 
+ini_set('memory_limit', '-1');
+
 echo '╔═════════════════════════════════════════════════════╗' . PHP_EOL;
 echo '║                                                     ║' . PHP_EOL;
 echo '║ MNIST Handwritten Digit Recognizer                  ║' . PHP_EOL;
