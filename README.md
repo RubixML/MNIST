@@ -6,7 +6,6 @@ The [MNIST](https://en.wikipedia.org/wiki/MNIST_database) dataset is a set of 70
 - **Memory needed**: < 4G
 
 ## Installation
-
 Clone the project locally with [Git](https://git-scm.com/):
 ```sh
 $ git clone https://github.com/RubixML/MNIST
@@ -21,14 +20,14 @@ $ composer install
 - [PHP](https://php.net) 7.1.3 or above
 
 ## Tutorial
-Through the discovery of deep learning, computers are able to build and compose representations of the world through raw data. To train a computer program to see an image and to recognize what it is, is truly an amazing accomplishment. In this tutorial, we'll use Rubix ML to train a deep learning model known as a [Multi Layer Perceptron](https://github.com/RubixML/RubixML#multi-layer-perceptron) to distinguish the numbers in handwritten digits. Along the way, you'll learn about higher order feature representations and how to build a neural network architecture to achieve a classification accuracy of over 99%.
+Through the discovery of deep learning, computers are able to build and compose representations of the world through raw data. To train a computer program to see an image and to recognize what it is, is truly an amazing accomplishment. In this tutorial, we'll use Rubix ML to train a deep learning model known as a [Multi Layer Perceptron](https://docs.rubixml.com/en/latest/classifiers/multi-layer-perceptron.html) to distinguish the numbers in handwritten digits. Along the way, you'll learn about higher order feature representations and how to build a neural network architecture to achieve a classification accuracy of over 99%.
 
-Deep Learning involves subsequent layers of computation that break down the feature space into what are called *higher order representations*. For the MNIST problem, a classifier will need to be able to learn the lines, edges, corners, and combinations thereof in order to distinguish numbers from the images. In the figure below, we see a snapshot of the features at one of the hidden layers of a neural network trained on the MNIST dataset. The idea is that at each layer, the learner builds more detailed depictions of the training data until the digits are easily distinguishable by a [SoftMax](https://github.com/RubixML/RubixML#softmax) output layer.
+Deep Learning involves subsequent layers of computation that break down the feature space into what are called *higher order representations*. For the MNIST problem, a classifier will need to be able to learn the lines, edges, corners, and combinations thereof in order to distinguish numbers from the images. In the figure below, we see a snapshot of the features at one of the hidden layers of a neural network trained on the MNIST dataset. The idea is that at each layer, the learner builds more detailed depictions of the training data until the digits are easily distinguishable by a [Softmax](https://docs.rubixml.com/en/latest/neural-network/activation-functions/softmax.html) output layer.
 
 ![MNIST Deep Learning](https://github.com/RubixML/MNIST/blob/master/docs/images/mnist-deep-learning.png?raw=true)
 
 ### Training
-The MNIST dataset comes to us in the form of 60,000 training, and 10,000 testing images organized into folders where the folder name is the label given to the sample by a human. We'll use the `imagecreatefrompng()` function from the [GD library](https://www.php.net/manual/en/book.image.php) to load the images into PHP as resources. Then we'll instantiate a new [Labeled](https://github.com/RubixML/RubixML#labeled) dataset object with the samples and labels from the training set.
+The MNIST dataset comes to us in the form of 60,000 training, and 10,000 testing images organized into folders where the folder name is the label given to the sample by a human. We'll use the `imagecreatefrompng()` function from the [GD library](https://www.php.net/manual/en/book.image.php) to load the images into PHP as resources. Then we'll instantiate a new [Labeled](https://docs.rubixml.com/en/latest/datasets/labeled.html) dataset object with the samples and labels from the training set.
 
 > Source code can be found in the [train.php](https://github.com/RubixML/MNIST/blob/master/train.php) file in project root.
 
@@ -47,7 +46,7 @@ for ($label = 0; $label < 10; $label++) {
 $dataset = new Labeled($samples, $labels);
 ```
 
-Next we'll instantiate the neural network learner and wrap it in a transformer [Pipeline](https://github.com/RubixML/RubixML#pipeline) that will resize, vectorize, and center the image samples automatically for us. We'll start by considering a neural network hidden layer architecture suited for the MNIST problem which consists of 3 layers of [Dense](https://github.com/RubixML/RubixML#dense) neurons, followed by a [Leaky ReLU](https://github.com/RubixML/RubixML#leaky-relu) activation function, and then a mild [Dropout](https://github.com/RubixML/RubixML#dropout) to improve the network's generalization ability. The [AdaMax](https://github.com/RubixML/RubixML#adamax) optimizer is a Gradient Descent optimizer based on the Adam algorithm that we use to update the weights of the network. We've found that this architecture and learning rate works quite well for this problem but feel free to experiment on your own with different architectures and hyperparameters.
+Next we'll instantiate the neural network learner and wrap it in a transformer [Pipeline](https://docs.rubixml.com/en/latest/pipeline.html) that will resize, vectorize, and center the image samples automatically for us. We'll start by considering a neural network hidden layer architecture suited for the MNIST problem which consists of 3 layers of [Dense](https://docs.rubixml.com/en/latest/neural-network/hidden-layers/dense.html) neurons, followed by a [Leaky ReLU](https://docs.rubixml.com/en/latest/neural-network/activation-functions/leaky-relu.html) activation function, and then a mild [Dropout](https://docs.rubixml.com/en/latest/neural-network/hidden-layers/dropout.html) to improve the network's generalization ability. The [AdaMax](https://docs.rubixml.com/en/latest/neural-network/optimizers/adamax.html) optimizer is a Gradient Descent optimizer based on the Adam algorithm that we use to update the weights of the network. We've found that this architecture and learning rate works quite well for this problem but feel free to experiment on your own with different architectures and hyperparameters.
 
 ```php
 use Rubix\ML\Pipeline;
@@ -89,7 +88,7 @@ Lastly, to save our model we'll wrap the entire pipeline in a Persistent Model m
 $estimator->train($dataset);
 ```
 
-We can visualize the training progress at each stage by dumping the values of the loss function and validation metric to load into plotting software. In this case, the `steps()` method will output an array containing the values of the default [Cross Entropy](https://github.com/RubixML/RubixML#cross-entropy) cost function and the `scores()` will return an array of scores from the default [FBeta](https://github.com/RubixML/RubixML#f-beta) validation metric.
+We can visualize the training progress at each stage by dumping the values of the loss function and validation metric to load into plotting software. In this case, the `steps()` method will output an array containing the values of the default [Cross Entropy](https://docs.rubixml.com/en/latest/neural-network/cost-functions/cross-entropy.html) cost function and the `scores()` will return an array of scores from the default [FBeta](https://docs.rubixml.com/en/latest/cross-validation/metrics/f-beta.html) validation metric.
 
 ```php
 $steps = $estimator->steps();
@@ -105,7 +104,7 @@ And here is the F Beta validation score at each epoch.
 
 ![F Beta Score](https://raw.githubusercontent.com/RubixML/MNIST/master/docs/images/f-beta-score.svg?sanitize=true)
 
-Finally, we save the trained network by calling the `save()` method provided by the [Persistent Model](https://github.com/RubixML/RubixML#persistent-model) wrapper.
+Finally, we save the trained network by calling the `save()` method provided by the [Persistent Model](https://docs.rubixml.com/en/latest/persistent-model.html) wrapper.
 
 ```php
 $estimator->save();
