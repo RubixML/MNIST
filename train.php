@@ -9,17 +9,14 @@ use Rubix\ML\Other\Loggers\Screen;
 use Rubix\ML\Persisters\Filesystem;
 use Rubix\ML\NeuralNet\Layers\Dense;
 use Rubix\ML\NeuralNet\Layers\Dropout;
-use Rubix\ML\Transformers\ImageResizer;
 use Rubix\ML\NeuralNet\Layers\Activation;
-use Rubix\ML\NeuralNet\Optimizers\AdaMax;
+use Rubix\ML\NeuralNet\Optimizers\Adam;
+use Rubix\ML\Transformers\ImageResizer;
 use Rubix\ML\Transformers\ImageVectorizer;
 use Rubix\ML\Transformers\ZScaleStandardizer;
 use Rubix\ML\Classifiers\MultiLayerPerceptron;
 use Rubix\ML\NeuralNet\ActivationFunctions\LeakyReLU;
 use League\Csv\Writer;
-
-const MODEL_FILE = 'mnist.model';
-const PROGRESS_FILE = 'progress.csv';
 
 ini_set('memory_limit', '-1');
 
@@ -58,19 +55,22 @@ $estimator = new PersistentModel(
         new Dense(100),
         new Activation(new LeakyReLU()),
         new Dropout(0.2),
-    ], 100, new AdaMax(0.001))),
-    new Filesystem(MODEL_FILE, true)
+    ], 100, new Adam(0.001))),
+    new Filesystem('mnist.model', true)
 );
 
 $estimator->setLogger(new Screen('MNIST'));
 
 $estimator->train($dataset);
 
-$writer = Writer::createFromPath(PROGRESS_FILE, 'w+');
-$writer->insertOne(['score', 'loss']);
-$writer->insertAll(array_map(null, $estimator->scores(), $estimator->steps()));
+$scores = $estimator->scores();
+$losses = $estimator->steps();
 
-echo 'Progress saved to ' . PROGRESS_FILE . PHP_EOL;
+$writer = Writer::createFromPath('progress.csv', 'w+');
+$writer->insertOne(['score', 'loss']);
+$writer->insertAll(array_map(null, $scores, $losses));
+
+echo 'Progress saved to progress.csv' . PHP_EOL;
 
 if (strtolower(trim(readline('Save this model? (y|[n]): '))) === 'y') {
     $estimator->save();

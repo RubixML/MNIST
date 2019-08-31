@@ -9,9 +9,6 @@ use Rubix\ML\CrossValidation\Reports\AggregateReport;
 use Rubix\ML\CrossValidation\Reports\ConfusionMatrix;
 use Rubix\ML\CrossValidation\Reports\MulticlassBreakdown;
 
-const MODEL_FILE = 'mnist.model';
-const REPORT_FILE = 'report.json';
-
 ini_set('memory_limit', '-1');
 
 echo '╔═════════════════════════════════════════════════════╗' . PHP_EOL;
@@ -34,7 +31,9 @@ for ($label = 0; $label < 10; $label++) {
 
 $dataset = new Labeled($samples, $labels);
 
-$estimator = PersistentModel::load(new Filesystem(MODEL_FILE));
+$estimator = PersistentModel::load(new Filesystem('mnist.model'));
+
+echo 'Making predictions ...' . PHP_EOL;
 
 $predictions = $estimator->predict($dataset);
 
@@ -45,6 +44,6 @@ $report = new AggregateReport([
 
 $results = $report->generate($predictions, $dataset->labels());
 
-file_put_contents(REPORT_FILE, json_encode($results, JSON_PRETTY_PRINT));
+file_put_contents('report.json', json_encode($results, JSON_PRETTY_PRINT));
 
-echo 'Report saved to ' . REPORT_FILE . PHP_EOL;
+echo 'Report saved to report.json' . PHP_EOL;

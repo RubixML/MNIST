@@ -1,12 +1,12 @@
 {
-    "name": "rubix/cifar-10",
+    "name": "rubix/mnist",
     "type": "project",
-    "description": "CIFAR-10 Image Classifier using a fully connected multi layer neural network.",
-    "homepage": "https://github.com/RubixML/CIFAR10",
+    "description": "Handwritten digit recognizer using a feed forward neural network and the MNIST dataset of 70,000 human-labeled handwritten digits.",
+    "homepage": "https://github.com/RubixML/MNIST",
     "license": "MIT",
     "keywords": [
         "machine", "learning", "data", "science", "mining", "predictive", "modeling",
-        "ai", "classification", "neural", "net", "cifar-10", "image-recognition"
+        "ai", "classification", "neural", "net", "mnist", "handwritten", "digit"
     ],
     "authors": [
         {
@@ -19,7 +19,7 @@
     "require": {
         "php": ">=7.1.3",
         "league/csv": "^9.2",
-        "rubix/ml": "^0.0.14-beta"
+        "rubix/ml": "^0.0.15-beta"
     },
     "config": {
         "preferred-install": "dist",
