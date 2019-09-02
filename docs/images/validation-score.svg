@@ -68,7 +68,7 @@
  <path fill="none" stroke="rgb(179,179,179)" stroke-linejoin="round" d="M 2103,2349 L 2253,2349"/>
  <path fill="none" stroke="rgb(179,179,179)" stroke-linejoin="round" d="M 2103,2349 L 2253,2349"/>
  <path fill="none" stroke="rgb(179,179,179)" stroke-linejoin="round" d="M 2253,7215 L 2253,2348"/>
- <path fill="none" stroke="rgb(0,69,134)" stroke-width="80" stroke-linejoin="round" d="M 2253,2876 L 2816,5296 3380,5614 3943,5809 4507,5962 5070,6075 5634,6160 6197,6240 6761,6278 7324,6323 7888,6362 8450,6433 9014,6446 9577,6484 10141,6506 10704,6526 11268,6567 11831,6582 12395,6595 12958,6634 13522,6635"/>
+ <path fill="none" stroke="rgb(255,56,56)" stroke-width="80" stroke-linejoin="round" d="M 2253,2876 L 2816,5296 3380,5614 3943,5809 4507,5962 5070,6075 5634,6160 6197,6240 6761,6278 7324,6323 7888,6362 8450,6433 9014,6446 9577,6484 10141,6506 10704,6526 11268,6567 11831,6582 12395,6595 12958,6634 13522,6635"/>
  <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="353px" font-weight="400"><tspan class="TextPosition" x="2156" y="7783"><tspan fill="rgb(0,0,0)" stroke="none">1</tspan></tspan></tspan></text>
  <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="353px" font-weight="400"><tspan class="TextPosition" x="2719" y="7783"><tspan fill="rgb(0,0,0)" stroke="none">2</tspan></tspan></tspan></text>
  <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="353px" font-weight="400"><tspan class="TextPosition" x="3283" y="7783"><tspan fill="rgb(0,0,0)" stroke="none">3</tspan></tspan></tspan></text>
@@ -99,7 +99,7 @@
  <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="353px" font-weight="400"><tspan class="TextPosition" x="1315" y="2473"><tspan fill="rgb(0,0,0)" stroke="none">0.06</tspan></tspan></tspan></text>
  <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="459px" font-weight="400"><tspan class="TextPosition" x="6642" y="877"><tspan fill="rgb(0,0,0)" stroke="none">Training Loss</tspan></tspan></tspan></text>
  <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="388px" font-weight="400"><tspan class="TextPosition" x="5213" y="1771"><tspan fill="rgb(0,0,0)" stroke="none">Rubix ML Multi Layer Perceptron</tspan></tspan></tspan></text>
- <path fill="none" stroke="rgb(0,69,134)" stroke-width="80" stroke-linejoin="round" d="M 14154,4499 L 14954,4499"/>
+ <path fill="none" stroke="rgb(255,56,56)" stroke-width="80" stroke-linejoin="round" d="M 14154,4499 L 14954,4499"/>
  <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="353px" font-weight="400"><tspan class="TextPosition" x="15054" y="4622"><tspan fill="rgb(0,0,0)" stroke="none">loss</tspan></tspan></tspan></text>
  <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="318px" font-weight="400"><tspan class="TextPosition" x="7066" y="8414"><tspan fill="rgb(0,0,0)" stroke="none">Epoch</tspan></tspan></tspan></text>
  <text class="TextShape" transform="rotate(-90 828 6010)"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="318px" font-weight="400"><tspan class="TextPosition" x="828" y="6010"><tspan fill="rgb(0,0,0)" stroke="none">Cross Entropy</tspan></tspan></tspan></text>

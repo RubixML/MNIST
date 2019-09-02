@@ -2,8 +2,8 @@
 The [MNIST](https://en.wikipedia.org/wiki/MNIST_database) dataset is a set of 70,000 human labeled 28 x 28 greyscale images of individual handwritten digits. It is a subset of a larger dataset available from NIST - The National Institute of Standards and Technology. In this tutorial, you'll create your own handwritten digit recognizer using a multi layer neural network trained on the MNIST dataset in Rubix ML.
 
 - **Difficulty**: Hard
-- **Training time**: < 3 Hours
-- **Memory needed**: < 4G
+- **Training time**: Hours
+- **Memory needed**: 4G
 
 ## Installation
 Clone the project locally with [Git](https://git-scm.com/):
@@ -64,15 +64,15 @@ Next, we'll set the batch size to 100 - meaning that 100 random samples from the
 use Rubix\ML\Pipeline;
 use Rubix\ML\PersistentModel;
 use Rubix\ML\Persisters\Filesystem;
-use Rubix\ML\NeuralNet\Layers\Dense;
-use Rubix\ML\NeuralNet\Layers\Dropout;
-use Rubix\ML\NeuralNet\Layers\Activation;
-use Rubix\ML\NeuralNet\Optimizers\Adam;
 use Rubix\ML\Transformers\ImageResizer;
 use Rubix\ML\Transformers\ImageVectorizer;
 use Rubix\ML\Transformers\ZScaleStandardizer;
 use Rubix\ML\Classifiers\MultiLayerPerceptron;
+use Rubix\ML\NeuralNet\Layers\Dense;
+use Rubix\ML\NeuralNet\Layers\Dropout;
+use Rubix\ML\NeuralNet\Layers\Activation;
 use Rubix\ML\NeuralNet\ActivationFunctions\LeakyReLU;
+use Rubix\ML\NeuralNet\Optimizers\Adam;
 
 $estimator = new PersistentModel(
     new Pipeline([
@@ -113,11 +113,9 @@ $scores = $estimator->scores();
 
 Then we can plot the values using our favorite plotting software. If all goes well, the value of the loss should go down as the value of the validation score goes up.
 
-![Cross Entropy Loss](https://raw.githubusercontent.com/RubixML/MNIST/master/docs/images/cross-entropy-loss.svg?sanitize=true)
+![Cross Entropy Loss](https://raw.githubusercontent.com/RubixML/MNIST/master/docs/images/training-loss.svg?sanitize=true)
 
-And here is the F Beta validation score at each epoch.
-
-![F Beta Score](https://raw.githubusercontent.com/RubixML/MNIST/master/docs/images/f-beta-score.svg?sanitize=true)
+![F1 Score](https://raw.githubusercontent.com/RubixML/MNIST/master/docs/images/validation-score.svg?sanitize=true)
 
 ### Saving
 Lastly, we can save the trained network by calling the `save()` method provided by the [Persistent Model](https://docs.rubixml.com/en/latest/persistent-model.html) wrapper.
@@ -125,11 +123,6 @@ Lastly, we can save the trained network by calling the `save()` method provided 
 ```php
 $estimator->save();
 ```
-
-### Inference
-
-Coming soon ...
-
 
 ### Cross Validation
 
