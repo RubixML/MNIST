@@ -11,7 +11,7 @@ Clone the project locally with [Git](https://git-scm.com/):
 $ git clone https://github.com/RubixML/MNIST
 ```
 
-Install project dependencies with [Composer](http://getcomposer.com):
+Install project dependencies with [Composer](https://getcomposer.org/):
 ```sh
 $ composer install
 ```
