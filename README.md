@@ -42,7 +42,7 @@ for ($label = 0; $label < 10; $label++) {
 }
 ```
 
-Then, we can instantiate a new [Labeled](https://docs.rubixml.com/en/latest/datasets/labeled.html) datset object from the samples and labels.
+Then, we can instantiate a new [Labeled](https://docs.rubixml.com/en/latest/datasets/labeled.html) dataset object from the samples and labels.
 
 ```php
 use Rubix\ML\Datasets\Labeled;
@@ -51,12 +51,12 @@ $dataset = new Labeled($samples, $labels);
 ```
 
 ### Dataset Preparation
-We're going to use a transformer [Pipeline](https://docs.rubixml.com/en/latest/pipeline.html) to shape the dataset into the correct format for our learner automatically. We know that the size of each sample image in the MNIST dataset is 28 x 28 pixels, however, to make sure that future samples are always the correct size we'll throw in an [Image Resizer](https://docs.rubixml.com/en/latest/transformers/image-resizer.html) just in case. Then, to convert the image into raw pixel data we'll use the [Image Vectorizer](https://docs.rubixml.com/en/latest/transformers/image-vectorizer.html) which extracts the raw color channel data from the image. Since the sample images are black and white, we only need to use 1 color channel per pixel. At the end of the pipeline we'll center and scale the dataset using the [Z Scale Standardizer](https://docs.rubixml.com/en/latest/transformers/z-scale-standardizer.html) to help speed up convergence of the network.
+We're going to use a transformer [Pipeline](https://docs.rubixml.com/en/latest/pipeline.html) to shape the dataset into the correct format for our learner. We know that the size of each sample image in the MNIST dataset is 28 x 28 pixels, but just to make sure that future samples are always the correct size we'll add an [Image Resizer](https://docs.rubixml.com/en/latest/transformers/image-resizer.html). Then, to convert the image into raw pixel data we'll use the [Image Vectorizer](https://docs.rubixml.com/en/latest/transformers/image-vectorizer.html) which extracts the raw color channel data from the image. Since the sample images are black and white, we only need to use 1 color channel per pixel. At the end of the pipeline we'll center and scale the dataset using the [Z Scale Standardizer](https://docs.rubixml.com/en/latest/transformers/z-scale-standardizer.html) to help speed up the convergence of the neural network.
 
 ### Instantiating the Learner
 Let's consider a neural network architecture suited for the MNIST problem consisting of 3 groups of [Dense](https://docs.rubixml.com/en/latest/neural-network/hidden-layers/dense.html) neuronal layers, followed by a [Leaky ReLU](https://docs.rubixml.com/en/latest/neural-network/activation-functions/leaky-relu.html) activation layer, and then a mild [Dropout](https://docs.rubixml.com/en/latest/neural-network/hidden-layers/dropout.html) layer to act as a regularizer. In theory, each subsequent layer of the network becomes a more complex feature detector. The output layer adds an additional layer of neurons with a [Softmax](https://docs.rubixml.com/en/latest/neural-network/activation-functions/softmax.html) activation making this particular network architecture 4 layers deep.
 
-Next, we'll set the batch size to 200 - such that 200 random samples from the training set will be sent through the network at a time during training. The [Adam](https://docs.rubixml.com/en/latest/neural-network/optimizers/adam.html) optimizer determines the update step of the Gradient Descent algorithm and uses a combination of [Momentum](https://docs.rubixml.com/en/latest/neural-network/optimizers/momentum.html) and [RMS Prop](https://docs.rubixml.com/en/latest/neural-network/optimizers/rms-prop.html) to make its updates. It uses a global *learning rate* to control the size of the step which we'll set to 0.001 for this example.
+Next, we'll set the batch size to 200 meaning that up to 200 samples from the training set will be sent through the network at a time. The [Adam](https://docs.rubixml.com/en/latest/neural-network/optimizers/adam.html) optimizer determines the update step of the Gradient Descent algorithm and uses a combination of [Momentum](https://docs.rubixml.com/en/latest/neural-network/optimizers/momentum.html) and [RMS Prop](https://docs.rubixml.com/en/latest/neural-network/optimizers/rms-prop.html) to make its updates. It uses a global *learning rate* to control the size of the step which we'll set to 0.001 for this example.
 
 ```php
 use Rubix\ML\Pipeline;
@@ -95,13 +95,13 @@ $estimator = new PersistentModel(
 To allow us to save and load the model from storage, we'll wrap the entire pipeline in a [Persistent Model](https://docs.rubixml.com/en/latest/persistent-model.html) meta-estimator. Persistent Model provides additional `save()` and `load()` methods on top of the base estimator's methods. It needs a Persister object to tell it where the model is to be stored. For our purposes, we'll use the [Filesystem](https://docs.rubixml.com/en/latest/persisters/filesystem.html) persister which takes a path to the model file on disk. Setting history mode to true means that the persister will keep track of every save.
 
 ### Training
-To start training the neural network, simply call the `train()` method on the estimator instance with the training set as input.
+To start training the neural network, call the `train()` method on the estimator instance with the training set as input.
 ```php
 $estimator->train($dataset);
 ```
 
 ### Validation Score and Loss
-We can visualize the training progress at each stage by dumping the values of the loss function and validation metric after training. The `steps()` method will output an array containing the values of the default [Cross Entropy](https://docs.rubixml.com/en/latest/neural-network/cost-functions/cross-entropy.html) cost function and the `scores()` method will return an array of scores from the default [FBeta](https://docs.rubixml.com/en/latest/cross-validation/metrics/f-beta.html) validation metric.
+We can visualize the training progress at each stage by dumping the values of the loss function and validation metric after training. The `steps()` method will output an array containing the values of the default [Cross Entropy](https://docs.rubixml.com/en/latest/neural-network/cost-functions/cross-entropy.html) cost function and the `scores()` method will return an array of scores from the default [F Beta](https://docs.rubixml.com/en/latest/cross-validation/metrics/f-beta.html) validation metric.
 
 > **Note:** You can change the cost function and validation metric by setting them as hyper-parameters of the learner.
 
@@ -127,7 +127,6 @@ $estimator->save();
 ### Cross Validation
 Cross Validation is a technique for assessing how well the learner can generalize its training to an independent dataset. The goal is to identify selection bias or overfitting that would cause the model to perform poorly on unseen data.
 
-### Extracting the Data
 The MNIST dataset includes an extra 10,000 labeled images that we can use to test the model. Since we haven't used any of these samples to train the network with, we can effectively use them to test the generalization performance of the model. To start, we'll extract the testing samples and labels from the `testing` folder into a [Labeled](https://docs.rubixml.com/en/latest/datasets/labeled.html) dataset object.
 
 ```php
