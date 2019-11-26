@@ -56,6 +56,8 @@ $estimator = new PersistentModel(
 
 $estimator->setLogger(new Screen('MNIST'));
 
+echo 'Training ...' .  PHP_EOL;
+
 $estimator->train($dataset);
 
 $scores = $estimator->scores();
