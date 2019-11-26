@@ -2,9 +2,9 @@
 
 include __DIR__ . '/vendor/autoload.php';
 
-use Rubix\ML\Pipeline;
-use Rubix\ML\PersistentModel;
 use Rubix\ML\Datasets\Labeled;
+use Rubix\ML\PersistentModel;
+use Rubix\ML\Pipeline;
 use Rubix\ML\Transformers\ImageResizer;
 use Rubix\ML\Transformers\ImageVectorizer;
 use Rubix\ML\Transformers\ZScaleStandardizer;
