@@ -75,7 +75,7 @@ use Rubix\ML\Persisters\Filesystem;
 $estimator = new PersistentModel(
     new Pipeline([
         new ImageResizer(28, 28),
-        new ImageVectorizer(1),
+        new ImageVectorizer(true),
         new ZScaleStandardizer(),
     ], new MultiLayerPerceptron([
         new Dense(100),
