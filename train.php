@@ -8,7 +8,7 @@ use Rubix\ML\Pipeline;
 use Rubix\ML\Transformers\ImageResizer;
 use Rubix\ML\Transformers\ImageVectorizer;
 use Rubix\ML\Transformers\ZScaleStandardizer;
-use Rubix\ML\Classifiers\MultiLayerPerceptron;
+use Rubix\ML\Classifiers\MultilayerPerceptron;
 use Rubix\ML\NeuralNet\Layers\Dense;
 use Rubix\ML\NeuralNet\Layers\Dropout;
 use Rubix\ML\NeuralNet\Layers\Activation;
@@ -40,7 +40,7 @@ $estimator = new PersistentModel(
         new ImageResizer(28, 28),
         new ImageVectorizer(true),
         new ZScaleStandardizer(),
-    ], new MultiLayerPerceptron([
+    ], new MultilayerPerceptron([
         new Dense(100),
         new Activation(new LeakyReLU()),
         new Dropout(0.2),
@@ -50,7 +50,7 @@ $estimator = new PersistentModel(
         new Dense(100),
         new Activation(new LeakyReLU()),
         new Dropout(0.2),
-    ], 200, new Adam(0.001))),
+    ], 512, new Adam(0.001))),
     new Filesystem('mnist.model', true)
 );
 
