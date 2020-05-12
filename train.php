@@ -50,7 +50,7 @@ $estimator = new PersistentModel(
         new Dense(100),
         new Activation(new LeakyReLU()),
         new Dropout(0.2),
-    ], 512, new Adam(0.001))),
+    ], 256, new Adam(0.0001))),
     new Filesystem('mnist.model', true)
 );
 

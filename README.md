@@ -56,7 +56,7 @@ We're going to use a transformer [Pipeline](https://docs.rubixml.com/en/latest/p
 ### Instantiating the Learner
 Now, we'll go ahead and instantiate our [Multilayer Perceptron](https://docs.rubixml.com/en/latest/classifiers/multilayer-perceptron.html) classifier. Let's consider a neural network architecture suited for the MNIST problem consisting of 3 groups of [Dense](https://docs.rubixml.com/en/latest/neural-network/hidden-layers/dense.html) neuronal layers, followed by a [Leaky ReLU](https://docs.rubixml.com/en/latest/neural-network/activation-functions/leaky-relu.html) activation layer, and then a mild [Dropout](https://docs.rubixml.com/en/latest/neural-network/hidden-layers/dropout.html) layer to act as a regularizer. In theory, each subsequent layer of the network becomes a more complex feature detector. The output layer adds an additional layer of neurons with a [Softmax](https://docs.rubixml.com/en/latest/neural-network/activation-functions/softmax.html) activation making this particular network architecture 4 layers deep.
 
-Next, we'll set the batch size to 200 meaning that up to 200 samples from the training set will be sent through the network at a time. The [Adam](https://docs.rubixml.com/en/latest/neural-network/optimizers/adam.html) optimizer determines the update step of the Gradient Descent algorithm and uses a combination of [Momentum](https://docs.rubixml.com/en/latest/neural-network/optimizers/momentum.html) and [RMS Prop](https://docs.rubixml.com/en/latest/neural-network/optimizers/rms-prop.html) to make its updates. It uses a global *learning rate* to control the size of the step which we'll set to 0.001 for this example.
+Next, we'll set the batch size to 256 meaning that up to 256 samples from the training set will be sent through the network at a time. The [Adam](https://docs.rubixml.com/en/latest/neural-network/optimizers/adam.html) optimizer determines the update step of the Gradient Descent algorithm and uses a combination of [Momentum](https://docs.rubixml.com/en/latest/neural-network/optimizers/momentum.html) and [RMS Prop](https://docs.rubixml.com/en/latest/neural-network/optimizers/rms-prop.html) to make its updates. It uses a global *learning rate* to control the size of the step which we'll set to 0.0001 for this example.
 
 ```php
 use Rubix\ML\PersistentModel;
@@ -87,7 +87,7 @@ $estimator = new PersistentModel(
         new Dense(100),
         new Activation(new LeakyReLU()),
         new Dropout(0.2),
-    ], 200, new Adam(0.001))),
+    ], 256, new Adam(0.0001))),
     new Filesystem('mnist.model', true)
 );
 ```
