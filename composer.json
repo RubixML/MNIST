@@ -3,10 +3,12 @@
     "type": "project",
     "description": "Handwritten digit recognizer using a feed forward neural network and the MNIST dataset of 70,000 human-labeled handwritten digits.",
     "homepage": "https://github.com/RubixML/MNIST",
-    "license": "MIT",
+    "license": "Apache-2.0",
     "keywords": [
-        "machine", "learning", "data", "science", "mining", "predictive", "modeling",
-        "ai", "classification", "neural", "net", "mnist", "handwritten", "digit"
+        "classification", "cross validation", "dataset", "data science", "dropout", "example project",
+        "feed forward", "image recognition", "image classification", "leaky relu", "machine learning",
+        "ml", "mnist", "multilayer perceptron", "neural network", "php", "php ml", "relu", "rubix ml",
+        "rubixml", "tutorial"
     ],
     "authors": [
         {
