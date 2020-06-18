@@ -12,14 +12,9 @@ The [MNIST](https://en.wikipedia.org/wiki/MNIST_database) dataset is a set of 70
 - 3G of system memory or more
 
 ## Installation
-Clone the project locally with [Git](https://git-scm.com/):
+Create a new project with [Composer](https://getcomposer.org/):
 ```sh
-$ git clone https://github.com/RubixML/MNIST
-```
-
-Install project dependencies with [Composer](https://getcomposer.org/):
-```sh
-$ composer install
+$ composer create-project rubix/mnist
 ```
 
 ## Tutorial
