@@ -4,18 +4,18 @@ The [MNIST](https://en.wikipedia.org/wiki/MNIST_database) dataset is a set of 70
 - **Difficulty:** Hard
 - **Training time:** Hours
 
+## Installation
+Clone the project locally using [Composer](https://getcomposer.org/):
+```sh
+$ composer create-project rubix/mnist
+```
+
 ## Requirements
 - [PHP](https://php.net) 7.2 or above
 
 #### Recommended
 - [Tensor extension](https://github.com/RubixML/Tensor) for faster training and inference
 - 3G of system memory or more
-
-## Installation
-Create a new project with [Composer](https://getcomposer.org/):
-```sh
-$ composer create-project rubix/mnist
-```
 
 ## Tutorial
 
@@ -122,6 +122,12 @@ We can save the trained network by calling the `save()` method provided by the [
 $estimator->save();
 ```
 
+Now we're ready to run the training script from the command line.
+
+```sh
+$ php train.php
+```
+
 ### Cross Validation
 Cross Validation is a technique for assessing how well the learner can generalize its training to an independent dataset. The goal is to identify selection bias or overfitting that would cause the model to perform poorly on unseen data.
 
@@ -177,6 +183,11 @@ To generate the report, pass in the predictions along with the labels from the t
 
 ```php
 $results = $report->generate($predictions, $dataset->labels());
+```
+
+Now we're ready to run the validation script from the command line.
+```sh
+$ php validate.php
 ```
 
 Below is an excerpt from an example report. As you can see, our model was able to achieve 99% accuracy on the testing set.
