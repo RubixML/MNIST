@@ -10,6 +10,8 @@ Clone the project locally using [Composer](https://getcomposer.org/):
 $ composer create-project rubix/mnist
 ```
 
+> **Note:** Installation may take longer than usual due to the large dataset.
+
 ## Requirements
 - [PHP](https://php.net) 7.2 or above
 
