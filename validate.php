@@ -31,8 +31,8 @@ echo 'Making predictions ...' . PHP_EOL;
 $predictions = $estimator->predict($dataset);
 
 $report = new AggregateReport([
-    new MulticlassBreakdown(),
-    new ConfusionMatrix(),
+    'breakdown' => new MulticlassBreakdown(),
+    'matrix' => new ConfusionMatrix(),
 ]);
 
 $results = $report->generate($predictions, $dataset->labels());
