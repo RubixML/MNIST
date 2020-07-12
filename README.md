@@ -314,4 +314,4 @@ Email: corinna 'at' google.com
 >- Y. LeCun et al. (1998). Gradient-based learning applied to document recognition.
 
 ## License
-The code is licensed [Apache 2.0](LICENSE.md) and the tutorial is licensed [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).
+The code is licensed [MIT](LICENSE.md) and the tutorial is licensed [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).
