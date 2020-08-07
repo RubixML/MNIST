@@ -18,7 +18,7 @@ $samples = $labels = [];
 for ($label = 0; $label < 10; $label++) {
     foreach (glob("testing/$label/*.png") as $file) {
         $samples[] = [imagecreatefrompng($file)];
-        $labels[] = (string) $label;
+        $labels[] = "$label";
     }
 }
 
@@ -37,6 +37,8 @@ $report = new AggregateReport([
 
 $results = $report->generate($predictions, $dataset->labels());
 
-file_put_contents('report.json', json_encode($results, JSON_PRETTY_PRINT));
+echo $results;
+
+$results->toJSON()->write('report.json');
 
 echo 'Report saved to report.json' . PHP_EOL;

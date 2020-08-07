@@ -38,7 +38,7 @@ $samples = $labels = [];
 for ($label = 0; $label < 10; $label++) {
     foreach (glob("training/$label/*.png") as $file) {
         $samples[] = [imagecreatefrompng($file)];
-        $labels[] = (string) $label;
+        $labels[] = "$label";
     }
 }
 ```
@@ -144,7 +144,7 @@ $samples = $labels = [];
 for ($label = 0; $label < 10; $label++) {
     foreach (glob("testing/$label/*.png") as $file) {
         $samples[] = [imagecreatefrompng($file)];
-        $labels[] = (string) $label;
+        $labels[] = "$label";
     }
 }
 

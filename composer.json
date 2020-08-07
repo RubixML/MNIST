@@ -21,7 +21,7 @@
     "require": {
         "php": ">=7.2",
         "ext-gd": "*",
-        "rubix/ml": "^0.1.0-rc3"
+        "rubix/ml": "^0.1.0"
     },
     "suggest": {
         "ext-tensor": "For faster training and inference"
