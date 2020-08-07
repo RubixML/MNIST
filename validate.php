@@ -18,7 +18,7 @@ $samples = $labels = [];
 for ($label = 0; $label < 10; $label++) {
     foreach (glob("testing/$label/*.png") as $file) {
         $samples[] = [imagecreatefrompng($file)];
-        $labels[] = "$label";
+        $labels[] = "#$label";
     }
 }
 

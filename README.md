@@ -38,7 +38,7 @@ $samples = $labels = [];
 for ($label = 0; $label < 10; $label++) {
     foreach (glob("training/$label/*.png") as $file) {
         $samples[] = [imagecreatefrompng($file)];
-        $labels[] = "$label";
+        $labels[] = "#$label";
     }
 }
 ```
@@ -144,7 +144,7 @@ $samples = $labels = [];
 for ($label = 0; $label < 10; $label++) {
     foreach (glob("testing/$label/*.png") as $file) {
         $samples[] = [imagecreatefrompng($file)];
-        $labels[] = "$label";
+        $labels[] = "#$label";
     }
 }
 
@@ -186,6 +186,8 @@ To generate the report, pass in the predictions along with the labels from the t
 
 ```php
 $results = $report->generate($predictions, $dataset->labels());
+
+echo $results;
 ```
 
 Now we're ready to run the validation script from the command line.
@@ -196,100 +198,106 @@ $ php validate.php
 Below is an excerpt from an example report. As you can see, our model was able to achieve 99% accuracy on the testing set.
 
 ```json
-[
-    {
+{
+    "breakdown": {
         "overall": {
-            "accuracy": 0.9947324640239088,
-            "precision": 0.9741087612434818,
-            "recall": 0.9740133353147777,
-            "specificity": 0.997067020596092,
-            "negative_predictive_value": 0.9970704601333621,
-            "false_discovery_rate": 0.02589123875651811,
-            "miss_rate": 0.02598666468522217,
-            "fall_out": 0.0029329794039080204,
-            "false_omission_rate": 0.002929539866638009,
-            "f1_score": 0.9740148371825065,
-            "mcc": 0.9711116777704213,
-            "informedness": 0.9710803559108697,
-            "markedness": 0.9711792213768439,
-            "true_positives": 9742,
-            "true_negatives": 87678,
-            "false_positives": 258,
-            "false_negatives": 258,
+            "accuracy": 0.9936867061871887,
+            "accuracy_balanced": 0.9827299300164292,
+            "f1_score": 0.9690024869169903,
+            "precision": 0.9690931602689105,
+            "recall": 0.9689771553342812,
+            "specificity": 0.9964827046985771,
+            "negative_predictive_value": 0.9964864183831919,
+            "false_discovery_rate": 0.030906839731089673,
+            "miss_rate": 0.031022844665718752,
+            "fall_out": 0.003517295301422896,
+            "false_omission_rate": 0.0035135816168081367,
+            "threat_score": 0.939978395041131,
+            "mcc": 0.9655069498416134,
+            "informedness": 0.9654598600328583,
+            "markedness": 0.9655795786521022,
+            "true_positives": 9692,
+            "true_negatives": 87228,
+            "false_positives": 308,
+            "false_negatives": 308,
             "cardinality": 10000
         },
-        "label": {
-            "0": {
-                "accuracy": 0.9965220949263502,
-                "precision": 0.9768145161290323,
-                "recall": 0.9887755102040816,
-                "specificity": 0.9973851750795816,
-                "negative_predictive_value": 0.998747723132969,
-                "false_discovery_rate": 0.02318548387096775,
-                "miss_rate": 0.011224489795918391,
-                "fall_out": 0.0026148249204184237,
-                "false_omission_rate": 0.0012522768670309992,
-                "f1_score": 0.9827586206896551,
-                "mcc": 0.9808471473208658,
-                "informedness": 0.9861606852836631,
-                "markedness": 0.9755622392620014,
-                "true_positives": 969,
-                "true_negatives": 8773,
-                "false_positives": 23,
-                "false_negatives": 11,
+        "classes": {
+            "#0": {
+                "accuracy": 0.9961969369924967,
+                "accuracy_balanced": 0.9924488163078695,
+                "f1_score": 0.9812468322351747,
+                "precision": 0.9748237663645518,
+                "recall": 0.9877551020408163,
+                "specificity": 0.9971425305749229,
+                "negative_predictive_value": 0.9986263736263736,
+                "false_discovery_rate": 0.025176233635448186,
+                "miss_rate": 0.01224489795918371,
+                "fall_out": 0.0028574694250771415,
+                "false_omission_rate": 0.0013736263736263687,
+                "threat_score": 0.96318407960199,
+                "informedness": 0.984897632615739,
+                "markedness": 0.984897632615739,
+                "mcc": 0.9791571571236778,
+                "true_positives": 968,
+                "true_negatives": 8724,
+                "false_positives": 25,
+                "false_negatives": 12,
                 "cardinality": 980,
-                "density": 0.098
+                "proportion": 0.098
             },
-            "2": {
-                "accuracy": 0.9937774150770172,
-                "precision": 0.9718172983479106,
-                "recall": 0.9689922480620154,
-                "specificity": 0.9966936495268498,
-                "negative_predictive_value": 0.996352860724869,
-                "false_discovery_rate": 0.02818270165208936,
-                "miss_rate": 0.03100775193798455,
-                "fall_out": 0.003306350473150199,
-                "false_omission_rate": 0.0036471392751310505,
-                "f1_score": 0.970402717127608,
-                "mcc": 0.9669272305002852,
-                "informedness": 0.9656858975888651,
-                "markedness": 0.9681701590727796,
-                "true_positives": 1000,
-                "true_negatives": 8742,
-                "false_positives": 29,
-                "false_negatives": 32,
+            "#2": {
+                "accuracy": 0.9917118592039292,
+                "accuracy_balanced": 0.9774202967570631,
+                "f1_score": 0.960698689956332,
+                "precision": 0.9620991253644315,
+                "recall": 0.9593023255813954,
+                "specificity": 0.9955382679327308,
+                "negative_predictive_value": 0.9951967063129002,
+                "false_discovery_rate": 0.03790087463556846,
+                "miss_rate": 0.04069767441860461,
+                "fall_out": 0.004461732067269186,
+                "false_omission_rate": 0.004803293687099752,
+                "threat_score": 0.9243697478991597,
+                "informedness": 0.9548405935141262,
+                "markedness": 0.9548405935141262,
+                "mcc": 0.9560674244463004,
+                "true_positives": 990,
+                "true_negatives": 8702,
+                "false_positives": 39,
+                "false_negatives": 42,
                 "cardinality": 1032,
-                "density": 0.1032
+                "proportion": 0.1032
             },
         }
     },
-    {
-        "0": {
-            "0": 969,
-            "2": 5,
-            "7": 1,
-            "4": 1,
-            "8": 3,
-            "5": 2,
-            "6": 6,
-            "3": 1,
-            "1": 0,
-            "9": 4
+    "matrix": {
+        "#0": {
+            "#0": 968,
+            "#5": 2,
+            "#2": 5,
+            "#9": 3,
+            "#8": 3,
+            "#6": 8,
+            "#7": 2,
+            "#3": 1,
+            "#1": 0,
+            "#4": 1
         },
-        "2": {
-            "0": 2,
-            "2": 1000,
-            "7": 9,
-            "4": 4,
-            "8": 5,
-            "5": 0,
-            "6": 1,
-            "3": 4,
-            "1": 4,
-            "9": 0
-        }
+        "#5": {
+            "#0": 2,
+            "#5": 859,
+            "#2": 3,
+            "#9": 7,
+            "#8": 7,
+            "#6": 5,
+            "#7": 0,
+            "#3": 6,
+            "#1": 1,
+            "#4": 0
+        },
     }
-]
+}
 ```
 
 ### Next Steps
