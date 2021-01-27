@@ -23,7 +23,7 @@ $ composer create-project rubix/mnist
 ## Tutorial
 
 ### Introduction
-In this tutorial, we'll use Rubix ML to train a deep learning model called a Multilayer Perceptron to recognize the numbers in handwritten digits. For this problem, a classifier will need to be able to learn lines, edges, corners, and a combinations thereof in order to distinguish the numbers in the images. In the figure below, we see a snapshot of the features at one layer of a neural network trained on the MNIST dataset. The illustration shows that at each layer, the network builds a more detailed depiction of the training data until the digits are distinguishable by a [Softmax](https://docs.rubixml.com/neural-network/activation-functions/softmax.html) layer at the output.
+In this tutorial, we'll use Rubix ML to train a deep learning model called a Multilayer Perceptron to recognize the numbers in handwritten digits. For this problem, a classifier will need to be able to learn lines, edges, corners, and a combinations thereof in order to distinguish the numbers in the images. In the figure below, we see a snapshot of the features at one layer of a neural network trained on the MNIST dataset. The illustration shows that at each layer, the network builds a more detailed depiction of the training data until the digits are distinguishable by a [Softmax](https://docs.rubixml.com/latest/neural-network/activation-functions/softmax.html) layer at the output.
 
 ![MNIST Deep Learning](https://github.com/RubixML/MNIST/blob/master/docs/images/mnist-deep-learning.png?raw=true)
 
@@ -43,7 +43,7 @@ for ($label = 0; $label < 10; $label++) {
 }
 ```
 
-Then, we can instantiate a new [Labeled](https://docs.rubixml.com/datasets/labeled.html) dataset object from the samples and labels using the standard constructor.
+Then, we can instantiate a new [Labeled](https://docs.rubixml.com/latest/datasets/labeled.html) dataset object from the samples and labels using the standard constructor.
 
 ```php
 use Rubix\ML\Datasets\Labeled;
@@ -52,12 +52,12 @@ $dataset = new Labeled($samples, $labels);
 ```
 
 ### Dataset Preparation
-We're going to use a transformer [Pipeline](https://docs.rubixml.com/pipeline.html) to shape the dataset into the correct format for our learner. We know that the size of each sample image in the MNIST dataset is 28 x 28 pixels, but just to make sure that future samples are always the correct input size we'll add an [Image Resizer](https://docs.rubixml.com/transformers/image-resizer.html). Then, to convert the image into raw pixel data we'll use the [Image Vectorizer](https://docs.rubixml.com/transformers/image-vectorizer.html) which extracts continuous raw color channel values from the image. Since the sample images are black and white, we only need to use 1 color channel per pixel. At the end of the pipeline we'll center and scale the dataset using the [Z Scale Standardizer](https://docs.rubixml.com/transformers/z-scale-standardizer.html) to help speed up the convergence of the neural network.
+We're going to use a transformer [Pipeline](https://docs.rubixml.com/latest/pipeline.html) to shape the dataset into the correct format for our learner. We know that the size of each sample image in the MNIST dataset is 28 x 28 pixels, but just to make sure that future samples are always the correct input size we'll add an [Image Resizer](https://docs.rubixml.com/latest/transformers/image-resizer.html). Then, to convert the image into raw pixel data we'll use the [Image Vectorizer](https://docs.rubixml.com/latest/transformers/image-vectorizer.html) which extracts continuous raw color channel values from the image. Since the sample images are black and white, we only need to use 1 color channel per pixel. At the end of the pipeline we'll center and scale the dataset using the [Z Scale Standardizer](https://docs.rubixml.com/latest/transformers/z-scale-standardizer.html) to help speed up the convergence of the neural network.
 
 ### Instantiating the Learner
-Now, we'll go ahead and instantiate our [Multilayer Perceptron](https://docs.rubixml.com/classifiers/multilayer-perceptron.html) classifier. Let's consider a neural network architecture suited for the MNIST problem consisting of 3 groups of [Dense](https://docs.rubixml.com/neural-network/hidden-layers/dense.html) neuronal layers, followed by a [Leaky ReLU](https://docs.rubixml.com/neural-network/activation-functions/leaky-relu.html) activation layer, and then a mild [Dropout](https://docs.rubixml.com/neural-network/hidden-layers/dropout.html) layer to act as a regularizer. The output layer adds an additional layer of neurons with a [Softmax](https://docs.rubixml.com/neural-network/activation-functions/softmax.html) activation making this particular network architecture 4 layers deep.
+Now, we'll go ahead and instantiate our [Multilayer Perceptron](https://docs.rubixml.com/latest/classifiers/multilayer-perceptron.html) classifier. Let's consider a neural network architecture suited for the MNIST problem consisting of 3 groups of [Dense](https://docs.rubixml.com/latest/neural-network/hidden-layers/dense.html) neuronal layers, followed by a [Leaky ReLU](https://docs.rubixml.com/latest/neural-network/activation-functions/leaky-relu.html) activation layer, and then a mild [Dropout](https://docs.rubixml.com/latest/neural-network/hidden-layers/dropout.html) layer to act as a regularizer. The output layer adds an additional layer of neurons with a [Softmax](https://docs.rubixml.com/latest/neural-network/activation-functions/softmax.html) activation making this particular network architecture 4 layers deep.
 
-Next, we'll set the batch size to 256. The batch size is the number of samples sent through the network at a time. We'll also specify an optimizer and learning rate which determines the update step of the Gradient Descent algorithm. The [Adam](https://docs.rubixml.com/neural-network/optimizers/adam.html) optimizer uses a combination of [Momentum](https://docs.rubixml.com/neural-network/optimizers/momentum.html) and [RMS Prop](https://docs.rubixml.com/neural-network/optimizers/rms-prop.html) to make its updates and usually converges faster than standard *stochastic* Gradient Descent. It uses a global learning rate to control the magnitude of the step which we'll set to 0.0001 for this example.
+Next, we'll set the batch size to 256. The batch size is the number of samples sent through the network at a time. We'll also specify an optimizer and learning rate which determines the update step of the Gradient Descent algorithm. The [Adam](https://docs.rubixml.com/latest/neural-network/optimizers/adam.html) optimizer uses a combination of [Momentum](https://docs.rubixml.com/latest/neural-network/optimizers/momentum.html) and [RMS Prop](https://docs.rubixml.com/latest/neural-network/optimizers/rms-prop.html) to make its updates and usually converges faster than standard *stochastic* Gradient Descent. It uses a global learning rate to control the magnitude of the step which we'll set to 0.0001 for this example.
 
 ```php
 use Rubix\ML\PersistentModel;
@@ -93,7 +93,7 @@ $estimator = new PersistentModel(
 );
 ```
 
-To allow us to save and load the model from storage, we'll wrap the entire pipeline in a [Persistent Model](https://docs.rubixml.com/persistent-model.html) meta-estimator. Persistent Model provides additional `save()` and `load()` methods on top of the base estimator's methods. It needs a Persister object to tell it where the model is to be stored. For our purposes, we'll use the [Filesystem](https://docs.rubixml.com/persisters/filesystem.html) persister which takes a path to the model file on disk. Setting history mode to true means that the persister will keep track of every past save.
+To allow us to save and load the model from storage, we'll wrap the entire pipeline in a [Persistent Model](https://docs.rubixml.com/latest/persistent-model.html) meta-estimator. Persistent Model provides additional `save()` and `load()` methods on top of the base estimator's methods. It needs a Persister object to tell it where the model is to be stored. For our purposes, we'll use the [Filesystem](https://docs.rubixml.com/latest/persisters/filesystem.html) persister which takes a path to the model file on disk. Setting history mode to true means that the persister will keep track of every past save.
 
 ### Training
 To start training the neural network, call the `train()` method on the Estimator instance with the training set as an argument.
@@ -102,7 +102,7 @@ $estimator->train($dataset);
 ```
 
 ### Validation Score and Loss
-We can visualize the training progress at each stage by dumping the values of the loss function and validation metric after training. The `steps()` method will output an array containing the values of the default [Cross Entropy](https://docs.rubixml.com/neural-network/cost-functions/cross-entropy.html) cost function and the `scores()` method will return an array of scores from the [F Beta](https://docs.rubixml.com/cross-validation/metrics/f-beta.html) metric.
+We can visualize the training progress at each stage by dumping the values of the loss function and validation metric after training. The `steps()` method will output an array containing the values of the default [Cross Entropy](https://docs.rubixml.com/latest/neural-network/cost-functions/cross-entropy.html) cost function and the `scores()` method will return an array of scores from the [F Beta](https://docs.rubixml.com/latest/cross-validation/metrics/f-beta.html) metric.
 
 > **Note:** You can change the cost function and validation metric by setting them as hyper-parameters of the learner.
 
@@ -119,7 +119,7 @@ Then, we can plot the values using our favorite plotting software such as [Table
 ![F1 Score](https://raw.githubusercontent.com/RubixML/MNIST/master/docs/images/validation-scores.png)
 
 ### Saving
-We can save the trained network by calling the `save()` method provided by the [Persistent Model](https://docs.rubixml.com/persistent-model.html) wrapper. The model will be saved in a compact serialized format such as the [Native](https://docs.rubixml.com/persisters/serializers/native.html) PHP serialization format or [Igbinary](https://docs.rubixml.com/persisters/serializers/igbinary.html).
+We can save the trained network by calling the `save()` method provided by the [Persistent Model](https://docs.rubixml.com/latest/persistent-model.html) wrapper. The model will be saved in a compact serialized format such as the [Native](https://docs.rubixml.com/latest/persisters/serializers/native.html) PHP serialization format or [Igbinary](https://docs.rubixml.com/latest/persisters/serializers/igbinary.html).
 
 ```php
 $estimator->save();
@@ -134,7 +134,7 @@ $ php train.php
 ### Cross Validation
 Cross Validation is a technique for assessing how well the Estimator can generalize its training to an independent dataset. The goal is to identify problems such as underfitting, overfitting, or selection bias that would cause the model to perform poorly on new unseen data.
 
-Fortunately, the MNIST dataset includes an extra 10,000 labeled images that we can use to test the model. Since we haven't used any of these samples to train the network with, we can use them to test the generalization performance of the model. To start, we'll extract the testing samples and labels from the `testing` folder into a [Labeled](https://docs.rubixml.com/datasets/labeled.html) dataset object.
+Fortunately, the MNIST dataset includes an extra 10,000 labeled images that we can use to test the model. Since we haven't used any of these samples to train the network with, we can use them to test the generalization performance of the model. To start, we'll extract the testing samples and labels from the `testing` folder into a [Labeled](https://docs.rubixml.com/latest/datasets/labeled.html) dataset object.
 
 ```php
 use Rubix\ML\Datasets\Labeled;
@@ -152,7 +152,7 @@ $dataset = new Labeled($samples, $labels);
 ```
 
 ### Load Model from Storage
-In our training script we made sure to save the model before we exited. In our validation script, we'll load the trained model from storage and use it to make predictions on the testing set. The static `load()` method on [Persistent Model](https://docs.rubixml.com/persistent-model.html) takes a [Persister](https://docs.rubixml.com/persisters/api.html) object pointing to the model in storage as its only argument and returns the loaded estimator instance.
+In our training script we made sure to save the model before we exited. In our validation script, we'll load the trained model from storage and use it to make predictions on the testing set. The static `load()` method on [Persistent Model](https://docs.rubixml.com/latest/persistent-model.html) takes a [Persister](https://docs.rubixml.com/latest/persisters/api.html) object pointing to the model in storage as its only argument and returns the loaded estimator instance.
 
 ```php
 use Rubix\ML\PersistentModel;
@@ -169,7 +169,7 @@ $predictions = $estimator->predict($dataset);
 ```
 
 ### Generating the Report
-The cross validation report we'll generate is actually a combination of two reports - [Multiclass Breakdown](https://docs.rubixml.com/cross-validation/reports/multiclass-breakdown.html) and [Confusion Matrix](https://docs.rubixml.com/cross-validation/reports/confusion-matrix.html). We'll wrap each report in an [Aggregate Report](https://docs.rubixml.com/cross-validation/reports/aggregate-report.html) to generate both reports at once under their own key.
+The cross validation report we'll generate is actually a combination of two reports - [Multiclass Breakdown](https://docs.rubixml.com/latest/cross-validation/reports/multiclass-breakdown.html) and [Confusion Matrix](https://docs.rubixml.com/latest/cross-validation/reports/confusion-matrix.html). We'll wrap each report in an [Aggregate Report](https://docs.rubixml.com/latest/cross-validation/reports/aggregate-report.html) to generate both reports at once under their own key.
 
 ```php
 use Rubix\ML\CrossValidation\Reports\AggregateReport;
