@@ -2,7 +2,7 @@
 
 include __DIR__ . '/vendor/autoload.php';
 
-use Rubix\ML\Other\Loggers\Screen;
+use Rubix\ML\Loggers\Screen;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\PersistentModel;
 use Rubix\ML\Pipeline;
@@ -16,9 +16,7 @@ use Rubix\ML\NeuralNet\Layers\Activation;
 use Rubix\ML\NeuralNet\ActivationFunctions\LeakyReLU;
 use Rubix\ML\NeuralNet\Optimizers\Adam;
 use Rubix\ML\Persisters\Filesystem;
-use Rubix\ML\Datasets\Unlabeled;
-
-use function Rubix\ML\array_transpose;
+use Rubix\ML\Extractors\CSV;
 
 ini_set('memory_limit', '-1');
 
@@ -53,19 +51,16 @@ $estimator = new PersistentModel(
         new Activation(new LeakyReLU()),
         new Dropout(0.2),
     ], 256, new Adam(0.0001))),
-    new Filesystem('mnist.model', true)
+    new Filesystem('mnist.rbx', true)
 );
 
 $estimator->setLogger($logger);
 
 $estimator->train($dataset);
 
-$scores = $estimator->scores();
-$losses = $estimator->steps();
+$extractor = new CSV('progress.csv', true);
 
-Unlabeled::build(array_transpose([$scores, $losses]))
-    ->toCSV(['scores', 'losses'])
-    ->write('progress.csv');
+$extractor->export($estimator->steps());
 
 $logger->info('Progress saved to progress.csv');
 

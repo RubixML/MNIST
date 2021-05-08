@@ -2,7 +2,7 @@
 
 include __DIR__ . '/vendor/autoload.php';
 
-use Rubix\ML\Other\Loggers\Screen;
+use Rubix\ML\Loggers\Screen;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\PersistentModel;
 use Rubix\ML\Persisters\Filesystem;
@@ -27,7 +27,7 @@ for ($label = 0; $label < 10; $label++) {
 
 $dataset = new Labeled($samples, $labels);
 
-$estimator = PersistentModel::load(new Filesystem('mnist.model'));
+$estimator = PersistentModel::load(new Filesystem('mnist.rbx'));
 
 $logger->info('Making predictions');
 
@@ -42,6 +42,6 @@ $results = $report->generate($predictions, $dataset->labels());
 
 echo $results;
 
-$results->toJSON()->write('report.json');
+$results->toJSON()->saveTo(new Filesystem('report.json'));
 
 $logger->info('Report saved to report.json');

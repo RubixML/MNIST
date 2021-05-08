@@ -1,4 +1,4 @@
-# Rubix ML - MNIST Handwritten Digit Recognizer
+# MNIST Handwritten Digit Recognizer
 The [MNIST](https://en.wikipedia.org/wiki/MNIST_database) dataset is a set of 70,000 human-labeled 28 x 28 greyscale images of individual handwritten digits. It is a subset of a larger dataset available from NIST - The National Institute of Standards and Technology. In this tutorial, you'll create your own handwritten digit recognizer using a multilayer neural network trained on the MNIST dataset.
 
 - **Difficulty:** Hard
@@ -13,7 +13,7 @@ $ composer create-project rubix/mnist
 > **Note:** Installation may take longer than usual due to the large dataset.
 
 ## Requirements
-- [PHP](https://php.net) 7.2 or above
+- [PHP](https://php.net) 7.4 or above
 - [GD extension](https://www.php.net/manual/en/book.image.php)
 
 #### Recommended
@@ -89,7 +89,7 @@ $estimator = new PersistentModel(
         new Activation(new LeakyReLU()),
         new Dropout(0.2),
     ], 256, new Adam(0.0001))),
-    new Filesystem('mnist.model', true)
+    new Filesystem('mnist.rbx', true)
 );
 ```
 
@@ -102,14 +102,16 @@ $estimator->train($dataset);
 ```
 
 ### Validation Score and Loss
-We can visualize the training progress at each stage by dumping the values of the loss function and validation metric after training. The `steps()` method will output an array containing the values of the default [Cross Entropy](https://docs.rubixml.com/latest/neural-network/cost-functions/cross-entropy.html) cost function and the `scores()` method will return an array of scores from the [F Beta](https://docs.rubixml.com/latest/cross-validation/metrics/f-beta.html) metric.
+We can visualize the training progress at each stage by dumping the values of the loss function and validation metric after training. The `steps()` method will output an iterator containing the values of the default [Cross Entropy](https://docs.rubixml.com/latest/neural-network/cost-functions/cross-entropy.html) cost function and the `scores()` method will return an array of scores from the [F Beta](https://docs.rubixml.com/latest/cross-validation/metrics/f-beta.html) metric.
 
 > **Note:** You can change the cost function and validation metric by setting them as hyper-parameters of the learner.
 
 ```php
-$steps = $estimator->steps();
+use Rubix\ML\Extractors\CSV;
 
-$scores = $estimator->scores();
+$extractor = new CSV('progress.csv', true);
+
+$extractor->export($estimator->steps());
 ```
 
 Then, we can plot the values using our favorite plotting software such as [Tableu](https://public.tableau.com/en-us/s/) or [Excel](https://products.office.com/en-us/excel-a). If all goes well, the value of the loss should go down as the value of the validation score goes up. Due to snapshotting, the epoch at which the validation score is highest and the loss is lowest is the point at which the values of the network parameters are taken for the final model. This prevents the network from overfitting the training data by effectively *unlearning* some of the noise in the dataset.
@@ -158,7 +160,7 @@ In our training script we made sure to save the model before we exited. In our v
 use Rubix\ML\PersistentModel;
 use Rubix\ML\Persisters\Filesystem;
 
-$estimator = PersistentModel::load(new Filesystem('mnist.model'));
+$estimator = PersistentModel::load(new Filesystem('mnist.rbx'));
 ```
 
 ### Make Predictions
