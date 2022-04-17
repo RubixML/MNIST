@@ -13,7 +13,7 @@ use Rubix\ML\Classifiers\MultilayerPerceptron;
 use Rubix\ML\NeuralNet\Layers\Dense;
 use Rubix\ML\NeuralNet\Layers\Dropout;
 use Rubix\ML\NeuralNet\Layers\Activation;
-use Rubix\ML\NeuralNet\ActivationFunctions\LeakyReLU;
+use Rubix\ML\NeuralNet\ActivationFunctions\ReLU;
 use Rubix\ML\NeuralNet\Optimizers\Adam;
 use Rubix\ML\Persisters\Filesystem;
 use Rubix\ML\Extractors\CSV;
@@ -30,7 +30,8 @@ for ($label = 0; $label < 10; $label++) {
     foreach (glob("training/$label/*.png") as $file) {
         $samples[] = [imagecreatefrompng($file)];
         $labels[] = "#$label";
-    }
+    }y
+    
 }
 
 $dataset = new Labeled($samples, $labels);
@@ -41,14 +42,14 @@ $estimator = new PersistentModel(
         new ImageVectorizer(true),
         new ZScaleStandardizer(),
     ], new MultilayerPerceptron([
-        new Dense(100),
-        new Activation(new LeakyReLU()),
+        new Dense(128),
+        new Activation(new ReLU()),
         new Dropout(0.2),
-        new Dense(100),
-        new Activation(new LeakyReLU()),
+        new Dense(128),
+        new Activation(new ReLU()),
         new Dropout(0.2),
-        new Dense(100),
-        new Activation(new LeakyReLU()),
+        new Dense(128),
+        new Activation(new ReLU()),
         new Dropout(0.2),
     ], 256, new Adam(0.0001))),
     new Filesystem('mnist.rbx', true)

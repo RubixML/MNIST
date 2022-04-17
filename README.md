@@ -55,7 +55,7 @@ $dataset = new Labeled($samples, $labels);
 We're going to use a transformer [Pipeline](https://docs.rubixml.com/latest/pipeline.html) to shape the dataset into the correct format for our learner. We know that the size of each sample image in the MNIST dataset is 28 x 28 pixels, but just to make sure that future samples are always the correct input size we'll add an [Image Resizer](https://docs.rubixml.com/latest/transformers/image-resizer.html). Then, to convert the image into raw pixel data we'll use the [Image Vectorizer](https://docs.rubixml.com/latest/transformers/image-vectorizer.html) which extracts continuous raw color channel values from the image. Since the sample images are black and white, we only need to use 1 color channel per pixel. At the end of the pipeline we'll center and scale the dataset using the [Z Scale Standardizer](https://docs.rubixml.com/latest/transformers/z-scale-standardizer.html) to help speed up the convergence of the neural network.
 
 ### Instantiating the Learner
-Now, we'll go ahead and instantiate our [Multilayer Perceptron](https://docs.rubixml.com/latest/classifiers/multilayer-perceptron.html) classifier. Let's consider a neural network architecture suited for the MNIST problem consisting of 3 groups of [Dense](https://docs.rubixml.com/latest/neural-network/hidden-layers/dense.html) neuronal layers, followed by a [Leaky ReLU](https://docs.rubixml.com/latest/neural-network/activation-functions/leaky-relu.html) activation layer, and then a mild [Dropout](https://docs.rubixml.com/latest/neural-network/hidden-layers/dropout.html) layer to act as a regularizer. The output layer adds an additional layer of neurons with a [Softmax](https://docs.rubixml.com/latest/neural-network/activation-functions/softmax.html) activation making this particular network architecture 4 layers deep.
+Now, we'll go ahead and instantiate our [Multilayer Perceptron](https://docs.rubixml.com/latest/classifiers/multilayer-perceptron.html) classifier. Let's consider a neural network architecture suited for the MNIST problem consisting of 3 groups of [Dense](https://docs.rubixml.com/latest/neural-network/hidden-layers/dense.html) neuronal layers, followed by a [ReLU](https://docs.rubixml.com/latest/neural-network/activation-functions/relu.html) activation layer, and then a mild [Dropout](https://docs.rubixml.com/latest/neural-network/hidden-layers/dropout.html) layer to act as a regularizer. The output layer adds an additional layer of neurons with a [Softmax](https://docs.rubixml.com/latest/neural-network/activation-functions/softmax.html) activation making this particular network architecture 4 layers deep.
 
 Next, we'll set the batch size to 256. The batch size is the number of samples sent through the network at a time. We'll also specify an optimizer and learning rate which determines the update step of the Gradient Descent algorithm. The [Adam](https://docs.rubixml.com/latest/neural-network/optimizers/adam.html) optimizer uses a combination of [Momentum](https://docs.rubixml.com/latest/neural-network/optimizers/momentum.html) and [RMS Prop](https://docs.rubixml.com/latest/neural-network/optimizers/rms-prop.html) to make its updates and usually converges faster than standard *stochastic* Gradient Descent. It uses a global learning rate to control the magnitude of the step which we'll set to 0.0001 for this example.
 
@@ -69,7 +69,7 @@ use Rubix\ML\Classifiers\MultiLayerPerceptron;
 use Rubix\ML\NeuralNet\Layers\Dense;
 use Rubix\ML\NeuralNet\Layers\Dropout;
 use Rubix\ML\NeuralNet\Layers\Activation;
-use Rubix\ML\NeuralNet\ActivationFunctions\LeakyReLU;
+use Rubix\ML\NeuralNet\ActivationFunctions\ReLU;
 use Rubix\ML\NeuralNet\Optimizers\Adam;
 use Rubix\ML\Persisters\Filesystem;
 
@@ -80,13 +80,13 @@ $estimator = new PersistentModel(
         new ZScaleStandardizer(),
     ], new MultiLayerPerceptron([
         new Dense(100),
-        new Activation(new LeakyReLU()),
+        new Activation(new ReLU()),
         new Dropout(0.2),
         new Dense(100),
-        new Activation(new LeakyReLU()),
+        new Activation(new ReLU()),
         new Dropout(0.2),
         new Dense(100),
-        new Activation(new LeakyReLU()),
+        new Activation(new ReLU()),
         new Dropout(0.2),
     ], 256, new Adam(0.0001))),
     new Filesystem('mnist.rbx', true)
