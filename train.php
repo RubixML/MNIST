@@ -30,8 +30,7 @@ for ($label = 0; $label < 10; $label++) {
     foreach (glob("training/$label/*.png") as $file) {
         $samples[] = [imagecreatefrompng($file)];
         $labels[] = "#$label";
-    }y
-    
+    }
 }
 
 $dataset = new Labeled($samples, $labels);
