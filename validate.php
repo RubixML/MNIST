@@ -29,6 +29,8 @@ $dataset = new Labeled($samples, $labels);
 
 $estimator = PersistentModel::load(new Filesystem('mnist.rbx'));
 
+$estimator->cleanup();
+
 $logger->info('Making predictions');
 
 $predictions = $estimator->predict($dataset);
