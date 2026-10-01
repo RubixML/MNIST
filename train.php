@@ -14,6 +14,7 @@ use Rubix\ML\Classifiers\MultilayerPerceptron;
 use Rubix\ML\NeuralNet\Layers\Dense;
 use Rubix\ML\NeuralNet\Layers\Dropout;
 use Rubix\ML\NeuralNet\Layers\Activation;
+use Rubix\ML\NeuralNet\Layers\BatchNorm;
 use Rubix\ML\NeuralNet\ActivationFunctions\GELU;
 use Rubix\ML\NeuralNet\Optimizers\Schedulers\Constant;
 use Rubix\ML\NeuralNet\Optimizers\Adam;
@@ -45,15 +46,20 @@ $estimator = new PersistentModel(
         new ZScaleStandardizer(),
     ], new MultilayerPerceptron(
         hiddenLayers: [
-            new Dense(128),
+            new Dense(256),
             new Activation(new GELU()),
-            new Dropout(0.2),
-            new Dense(128),
+            new Dropout(0.1),
+            new Dense(256),
             new Activation(new GELU()),
-            new Dropout(0.2),
-            new Dense(128),
+            new Dropout(0.1),
+            new Dense(256, bias: false),
+            new BatchNorm(),
             new Activation(new GELU()),
-            new Dropout(0.2),
+            new Dropout(0.1),
+            new Dense(256),
+            new Activation(new GELU()),
+            new Dropout(0.1),
+            new Dense(10),
         ],
         batchSize: 32,
         gradientAccumulationSteps: 4,
@@ -74,7 +80,7 @@ $estimator->train($dataset);
 
 $extractor = new CSV('progress.csv', true);
 
-$extractor->export($estimator->steps());
+$extractor->export($estimator->progress());
 
 $logger->info('Progress saved to progress.csv');
 

@@ -2,24 +2,27 @@
 
 The [MNIST](https://en.wikipedia.org/wiki/MNIST_database) dataset is a set of 70,000 human-labeled 28 x 28 greyscale images of individual handwritten digits. It is a subset of a larger dataset available from NIST - The National Institute of Standards and Technology. In this tutorial, you'll create your own handwritten digit recognizer using a multilayer neural network trained on the MNIST dataset.
 
+## Requirements
+
+- [PHP](https://php.net) 8.3 or above
+- [Tensor extension 4.0+](https://github.com/RubixML/Tensor) for faster training and inference
+- [GD extension](https://www.php.net/manual/en/book.image.php)
+
 ## Installation
 
 Clone the project locally using [Composer](https://getcomposer.org/):
+
 ```sh
 $ composer create-project rubix/mnist
 ```
 
 > **Note:** Installation may take longer than usual due to the large dataset.
 
-## Requirements
+Then, install the Tensor Ext 4.x and GD extensions if they have not been installed yet. You can install the Tensor Ext extension using [PIE](https://github.com/php/pie) like in the example below:
 
-- [PHP](https://php.net) 8.3 or above
-- [GD extension](https://www.php.net/manual/en/book.image.php)
-
-#### Recommended
-
-- [Tensor extension](https://github.com/RubixML/Tensor) for faster training and inference
-- 3G of system memory or more
+```sh
+pie install rubix/tensor_ext
+```
 
 ## Tutorial
 
@@ -75,7 +78,7 @@ $transformers = [
 
 ### Instantiating the Learner
 
-Now, we'll go ahead and instantiate our [Multilayer Perceptron](https://rubixml.github.io/ML/3.0/classifiers/multilayer-perceptron.html) classifier. Let's consider a neural network architecture suited for the MNIST problem consisting of 3 groups of [Dense](https://rubixml.github.io/ML/3.0/neural-network/hidden-layers/dense.html) neuronal layers, each followed by a [GELU](https://rubixml.github.io/ML/3.0/neural-network/activation-functions/gelu.html) activation layer and a mild [Dropout](https://rubixml.github.io/ML/3.0/neural-network/hidden-layers/dropout.html) layer to act as a regularizer. GELU is a smooth, non-monotonic activation function that has been shown to train faster and generalize better than the classic [ReLU](https://rubixml.github.io/ML/3.0/neural-network/activation-functions/relu.html). The output layer adds an additional layer of neurons with a [Softmax](https://rubixml.github.io/ML/3.0/classifiers/multilayer-perceptron.html) activation making this particular network architecture 4 layers deep.
+Now, we'll go ahead and instantiate our [Multilayer Perceptron](https://rubixml.github.io/ML/3.0/classifiers/multilayer-perceptron.html) classifier. Let's consider a neural network architecture suited for the MNIST problem consisting of 4 groups of [Dense](https://rubixml.github.io/ML/3.0/neural-network/hidden-layers/dense.html) neuronal layers of 256 neurons each, each followed by a [GELU](https://rubixml.github.io/ML/3.0/neural-network/activation-functions/gelu.html) activation layer and a mild [Dropout](https://rubixml.github.io/ML/3.0/neural-network/hidden-layers/dropout.html) layer set to 0.1 to act as a regularizer. GELU is a smooth, non-monotonic activation function that has been shown to train faster and generalize better than the classic [ReLU](https://rubixml.github.io/ML/3.0/neural-network/activation-functions/relu.html). The third group disables the bias term of its Dense layer and is followed by a [Batch Norm](https://rubixml.github.io/ML/3.0/neural-network/hidden-layers/batch-norm.html) layer which normalizes the activations of the previous layer such that the mean activation is close to 0 and the standard deviation is close to 1. Batch Norm reduces the amount of covariate shift within the network, which makes it possible to converge faster under some circumstances. The output layer adds an additional layer of neurons with a [Softmax](https://rubixml.github.io/ML/3.0/classifiers/multilayer-perceptron.html) activation making this particular network architecture 6 layers deep.
 
 Next, we'll set the batch size to 32. The batch size is the number of samples sent through the network at a time. A smaller batch keeps memory usage in check but introduces more noise into each gradient estimate. To compensate, we'll set the gradient accumulation steps to 4, which waits until the gradients across 4 batches have been accumulated before applying a single update - giving us an effective batch size of 128 while only ever keeping 32 samples in memory at once.
 
@@ -95,6 +98,7 @@ use Rubix\ML\Classifiers\MultilayerPerceptron;
 use Rubix\ML\NeuralNet\Layers\Dense;
 use Rubix\ML\NeuralNet\Layers\Dropout;
 use Rubix\ML\NeuralNet\Layers\Activation;
+use Rubix\ML\NeuralNet\Layers\BatchNorm;
 use Rubix\ML\NeuralNet\ActivationFunctions\GELU;
 use Rubix\ML\NeuralNet\Optimizers\Schedulers\Constant;
 use Rubix\ML\NeuralNet\Optimizers\Adam;
@@ -110,15 +114,20 @@ $estimator = new PersistentModel(
         new ZScaleStandardizer(),
     ], new MultilayerPerceptron(
         hiddenLayers: [
-            new Dense(128),
+            new Dense(256),
             new Activation(new GELU()),
-            new Dropout(0.2),
-            new Dense(128),
+            new Dropout(0.1),
+            new Dense(256),
             new Activation(new GELU()),
-            new Dropout(0.2),
-            new Dense(128),
+            new Dropout(0.1),
+            new Dense(256, bias: false),
+            new BatchNorm(),
             new Activation(new GELU()),
-            new Dropout(0.2),
+            new Dropout(0.1),
+            new Dense(256),
+            new Activation(new GELU()),
+            new Dropout(0.1),
+            new Dense(10),
         ],
         batchSize: 32,
         gradientAccumulationSteps: 4,
@@ -148,7 +157,7 @@ $estimator->train($dataset);
 
 ### Validation Score and Loss
 
-We can visualize the training progress at each stage by dumping the values of the loss function and validation metric after training. The `steps()` method will output an iterator containing the values of the default [Multiclass Cross Entropy](https://rubixml.github.io/ML/3.0/neural-network/cost-functions/multiclass-cross-entropy.html) cost function and the `scores()` method will return an array of scores from the [F Beta](https://rubixml.github.io/ML/3.0/cross-validation/metrics/f-beta.html) metric.
+We can visualize the training progress at each stage by dumping the values of the loss function and validation metric after training. The `progress()` method will output an iterator that yields one row per epoch containing the epoch number, the value of the default [Multiclass Cross Entropy](https://rubixml.github.io/ML/3.0/neural-network/cost-functions/multiclass-cross-entropy.html) cost function, the gradient norm, and the score of the [F Beta](https://rubixml.github.io/ML/3.0/cross-validation/metrics/f-beta.html) metric. If you'd prefer to work with the validation metric on its own, the `scores()` method will return a flat array of just the F Beta scores from the last training session.
 
 > **Note:** You can change the cost function and validation metric by setting them as hyper-parameters of the learner.
 
@@ -157,7 +166,7 @@ use Rubix\ML\Extractors\CSV;
 
 $extractor = new CSV('progress.csv', true);
 
-$extractor->export($estimator->steps());
+$extractor->export($estimator->progress());
 ```
 
 Then, we can plot the values using our favorite plotting software such as [Tableu](https://public.tableau.com/en-us/s/) or [Excel](https://products.office.com/en-us/excel-a). If all goes well, the value of the loss should go down as the value of the validation score goes up. Due to snapshotting, the epoch at which the validation score is highest and the loss is lowest is the point at which the values of the network parameters are taken for the final model. This prevents the network from overfitting the training data by effectively *unlearning* some of the noise in the dataset.
@@ -253,107 +262,104 @@ Now we're ready to run the validation script from the command line.
 $ php validate.php
 ```
 
-Below is an excerpt from an example report. As you can see, our model was able to achieve 99% accuracy on the testing set.
+Below is an excerpt from an example report. As you can see, our model was able to achieve 99.5% accuracy on the testing set.
 
 ```json
 {
     "breakdown": {
         "overall": {
-            "accuracy": 0.9936867061871887,
-            "accuracy_balanced": 0.9827299300164292,
-            "f1_score": 0.9690024869169903,
-            "precision": 0.9690931602689105,
-            "recall": 0.9689771553342812,
-            "specificity": 0.9964827046985771,
-            "negative_predictive_value": 0.9964864183831919,
-            "false_discovery_rate": 0.030906839731089673,
-            "miss_rate": 0.031022844665718752,
-            "fall_out": 0.003517295301422896,
-            "false_omission_rate": 0.0035135816168081367,
-            "threat_score": 0.939978395041131,
-            "mcc": 0.9655069498416134,
-            "informedness": 0.9654598600328583,
-            "markedness": 0.9655795786521022,
-            "true_positives": 9692,
-            "true_negatives": 87228,
-            "false_positives": 308,
-            "false_negatives": 308,
+            "accuracy": 0.9954799999999999,
+            "balanced accuracy": 0.9872982617942677,
+            "f1 score": 0.9771892383306813,
+            "precision": 0.9772820640419069,
+            "recall": 0.9771069272854186,
+            "specificity": 0.9974895963031166,
+            "negative predictive value": 0.9974918048097698,
+            "false discovery rate": 0.02271793595809326,
+            "miss rate": 0.022893072714581464,
+            "fall out": 0.002510403696883279,
+            "false omission rate": 0.0025081951902301116,
+            "mcc": 0.9746831111939634,
+            "informedness": 0.9745965235885354,
+            "markedness": 0.9747738688516765,
+            "true positives": 9774,
+            "true negatives": 89774,
+            "false positives": 226,
+            "false negatives": 226,
             "cardinality": 10000
         },
         "classes": {
             "#0": {
-                "accuracy": 0.9961969369924967,
-                "accuracy_balanced": 0.9924488163078695,
-                "f1_score": 0.9812468322351747,
-                "precision": 0.9748237663645518,
-                "recall": 0.9877551020408163,
-                "specificity": 0.9971425305749229,
-                "negative_predictive_value": 0.9986263736263736,
-                "false_discovery_rate": 0.025176233635448186,
-                "miss_rate": 0.01224489795918371,
-                "fall_out": 0.0028574694250771415,
-                "false_omission_rate": 0.0013736263736263687,
-                "threat_score": 0.96318407960199,
-                "informedness": 0.984897632615739,
-                "markedness": 0.984897632615739,
-                "mcc": 0.9791571571236778,
-                "true_positives": 968,
-                "true_negatives": 8724,
-                "false_positives": 25,
-                "false_negatives": 12,
+                "accuracy": 0.9973,
+                "balanced accuracy": 0.9925912937236978,
+                "f1 score": 0.9862315145334012,
+                "precision": 0.9857288481141692,
+                "recall": 0.986734693877551,
+                "specificity": 0.9984478935698448,
+                "negative predictive value": 0.9985585985142477,
+                "false discovery rate": 0.014271151885830835,
+                "miss rate": 0.013265306122449028,
+                "fall out": 0.0015521064301552423,
+                "false omission rate": 0.001441401485752336,
+                "informedness": 0.9851825874473956,
+                "markedness": 0.9842874466284168,
+                "mcc": 0.9847349153256292,
+                "true positives": 967,
+                "true negatives": 9006,
+                "false positives": 14,
+                "false negatives": 13,
                 "cardinality": 980,
                 "proportion": 0.098
             },
-            "#2": {
-                "accuracy": 0.9917118592039292,
-                "accuracy_balanced": 0.9774202967570631,
-                "f1_score": 0.960698689956332,
-                "precision": 0.9620991253644315,
-                "recall": 0.9593023255813954,
-                "specificity": 0.9955382679327308,
-                "negative_predictive_value": 0.9951967063129002,
-                "false_discovery_rate": 0.03790087463556846,
-                "miss_rate": 0.04069767441860461,
-                "fall_out": 0.004461732067269186,
-                "false_omission_rate": 0.004803293687099752,
-                "threat_score": 0.9243697478991597,
-                "informedness": 0.9548405935141262,
-                "markedness": 0.9548405935141262,
-                "mcc": 0.9560674244463004,
-                "true_positives": 990,
-                "true_negatives": 8702,
-                "false_positives": 39,
-                "false_negatives": 42,
-                "cardinality": 1032,
-                "proportion": 0.1032
-            },
+            "#5": {
+                "accuracy": 0.9951,
+                "balanced accuracy": 0.9836577413834189,
+                "f1 score": 0.9724564362001124,
+                "precision": 0.9751972942502819,
+                "recall": 0.9697309417040358,
+                "specificity": 0.9975845410628019,
+                "negative predictive value": 0.99703719960496,
+                "false discovery rate": 0.0248027057497181,
+                "miss rate": 0.030269058295964157,
+                "fall out": 0.0024154589371980784,
+                "false omission rate": 0.002962800395040044,
+                "informedness": 0.9673154827668378,
+                "markedness": 0.9722344938552419,
+                "mcc": 0.9697718694549535,
+                "true positives": 865,
+                "true negatives": 9086,
+                "false positives": 22,
+                "false negatives": 27,
+                "cardinality": 892,
+                "proportion": 0.0892
+            }
         }
     },
     "matrix": {
         "#0": {
-            "#0": 968,
-            "#5": 2,
-            "#2": 5,
-            "#9": 3,
-            "#8": 3,
-            "#6": 8,
-            "#7": 2,
-            "#3": 1,
+            "#0": 967,
+            "#5": 1,
+            "#2": 2,
+            "#4": 2,
+            "#8": 2,
+            "#7": 0,
+            "#6": 4,
             "#1": 0,
-            "#4": 1
+            "#3": 0,
+            "#9": 3
         },
         "#5": {
-            "#0": 2,
-            "#5": 859,
-            "#2": 3,
-            "#9": 7,
-            "#8": 7,
-            "#6": 5,
-            "#7": 0,
-            "#3": 6,
-            "#1": 1,
-            "#4": 0
-        },
+            "#0": 3,
+            "#5": 865,
+            "#2": 1,
+            "#4": 0,
+            "#8": 5,
+            "#7": 1,
+            "#6": 7,
+            "#1": 0,
+            "#3": 3,
+            "#9": 2
+        }
     }
 }
 ```
