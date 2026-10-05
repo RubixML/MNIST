@@ -5,7 +5,8 @@ include __DIR__ . '/vendor/autoload.php';
 use Rubix\ML\Loggers\Screen;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\PersistentModel;
-use Rubix\ML\Pipeline;
+use Rubix\ML\Transformers\PersistentTransformer;
+use Rubix\ML\Transformers\Pipeline;
 use Rubix\ML\Transformers\ImageResizer;
 use Rubix\ML\Transformers\ImageVectorizer;
 use Rubix\ML\Transformers\ZScaleStandardizer;
@@ -25,26 +26,18 @@ ini_set('memory_limit', '-1');
 
 $logger = new Screen();
 
-$logger->info('Loading data into memory');
-
-$samples = $labels = [];
-
-for ($label = 0; $label < 10; $label++) {
-    foreach (glob("training/$label/*.png") as $file) {
-        $samples[] = [imagecreatefrompng($file)];
-        $labels[] = "#$label";
-    }
-}
-
-$dataset = new Labeled($samples, $labels);
-
-$estimator = new PersistentModel(
-    new Pipeline([
+$transformer = new PersistentTransformer(
+    base: new Pipeline([
         new ImageResizer(28, 28),
         new ImageVectorizer(grayscale: true),
         new FloatTypeConverter(),
         new ZScaleStandardizer(),
-    ], new MultilayerPerceptron(
+    ]),
+    persister: new Filesystem('transformer.rbx', true)
+);
+
+$estimator = new PersistentModel(
+    base: new MultilayerPerceptron(
         hiddenLayers: [
             new Dense(256),
             new Activation(new GELU()),
@@ -68,22 +61,50 @@ $estimator = new PersistentModel(
         epochs: 100,
         minChange: 1e-5,
         evalInterval: 1,
-        window: 10,
-        holdOut: 0.1
-    )),
-    new Filesystem('mnist.rbx', true)
+        window: 5,
+    ),
+    persister: new Filesystem('model.rbx', true)
 );
 
 $estimator->setLogger($logger);
 
-$estimator->train($dataset);
+$logger->info('Loading data into memory');
+
+$datasets = [];
+
+foreach (['training', 'testing'] as $dir) {
+    $samples = $labels = [];
+
+    for ($label = 0; $label < 10; $label++) {
+        foreach (glob("$dir/$label/*.png") as $file) {
+            $samples[] = [imagecreatefrompng($file)];
+            $labels[] = "#$label";
+        }
+    }
+
+    $datasets[] = new Labeled($samples, $labels);
+}
+
+[$training, $testing] = $datasets;
+
+$transformer->fit($training);
+
+$logger->info('Preprocessing dataset');
+
+$training->apply($transformer);
+$testing->apply($transformer);
+
+$estimator->setValidationDataset($testing);
+
+$estimator->train($training);
 
 $extractor = new CSV('progress.csv', true);
 
-$extractor->export($estimator->progress());
+$extractor->export($estimator->progress(), overwrite: true);
 
 $logger->info('Progress saved to progress.csv');
 
 if (strtolower(trim(readline('Save this model? (y|[n]): '))) === 'y') {
+    $transformer->save();
     $estimator->save();
 }
