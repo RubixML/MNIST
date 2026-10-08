@@ -5,6 +5,7 @@ include __DIR__ . '/vendor/autoload.php';
 use Rubix\ML\Loggers\Screen;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\PersistentModel;
+use Rubix\ML\Transformers\PersistentTransformer;
 use Rubix\ML\Persisters\Filesystem;
 use Rubix\ML\CrossValidation\Reports\AggregateReport;
 use Rubix\ML\CrossValidation\Reports\ConfusionMatrix;
@@ -13,6 +14,12 @@ use Rubix\ML\CrossValidation\Reports\MulticlassBreakdown;
 ini_set('memory_limit', '-1');
 
 $logger = new Screen();
+
+$transformer = PersistentTransformer::load(new Filesystem('transformer.rbx'));
+
+$estimator = PersistentModel::load(new Filesystem('model.rbx'));
+
+$estimator->cleanup();
 
 $logger->info('Loading data into memory');
 
@@ -27,7 +34,9 @@ for ($label = 0; $label < 10; $label++) {
 
 $dataset = new Labeled($samples, $labels);
 
-$estimator = PersistentModel::load(new Filesystem('mnist.rbx'));
+$logger->info('Preprocessing dataset');
+
+$dataset->apply($transformer);
 
 $logger->info('Making predictions');
 
