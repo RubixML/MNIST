@@ -5,7 +5,7 @@ The [MNIST](https://en.wikipedia.org/wiki/MNIST_database) dataset is a set of 70
 ## Requirements
 
 - [PHP](https://php.net) 8.3 or above
-- [Tensor extension 4.0+](https://github.com/RubixML/Tensor) for faster training and inference
+- [Tensor extension 4.0+](https://github.com/RubixML/Tensor-Ext) for faster training and inference
 - [GD extension](https://www.php.net/manual/en/book.image.php)
 
 ## Installation
@@ -18,10 +18,10 @@ $ composer create-project rubix/mnist
 
 > **Note:** Installation may take longer than usual due to the large dataset.
 
-Then, install the Tensor Ext 4.x and GD extensions if they have not been installed yet. You can install the Tensor Ext extension using [PIE](https://github.com/php/pie) like in the example below:
+Then, install the [Tensor Ext 4.x](https://github.com/RubixML/Tensor-Ext) and GD extensions if they have not been installed yet. You can install the Tensor Ext extension using [PIE](https://github.com/php/pie) like in the example below:
 
 ```sh
-pie install rubix/tensor_ext
+pie install rubix/tensor_ext:^4.1
 ```
 
 ## Tutorial
